@@ -23,17 +23,16 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'User not found' });
-        return;
-      }
-
-      res.status(200).send(user);
-    })
+    .orFail(new Error('NotValidId'))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: err.message });
+        return;
+      }
+
+      if (err.message === 'NotValidId') {
+        res.status(404).send({ message: 'Пользователь не найден' });
         return;
       }
 
@@ -47,15 +46,13 @@ const updateUser = (req, res) => {
     { ...req.body },
     { new: true, runValidators: true },
   )
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'User not found' });
+    .orFail(new Error('NotValidId'))
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      if (err.message === 'NotValidId') {
+        res.status(404).send({ message: 'Пользователь не найден' });
         return;
       }
-
-      res.status(200).send(user);
-    })
-    .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
         return;
@@ -72,17 +69,16 @@ const updateUserAvatar = (req, res) => {
     { avatar },
     { new: true, runValidators: true },
   )
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'User not found' });
-        return;
-      }
-
-      res.status(200).send(user);
-    })
+    .orFail(new Error('NotValidId'))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
+        return;
+      }
+
+      if (err.message === 'NotValidId') {
+        res.status(404).send({ message: 'Пользователь не найден' });
         return;
       }
 

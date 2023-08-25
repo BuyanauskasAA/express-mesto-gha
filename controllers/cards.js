@@ -26,7 +26,7 @@ const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Card not found' });
+        res.status(404).send({ message: 'Карточка не найдена' });
         return;
       }
 
@@ -49,17 +49,16 @@ const likeCard = (req, res) => {
     { new: true },
   )
     .populate(['owner', 'likes'])
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Card not found' });
-        return;
-      }
-
-      res.status(200).send(card);
-    })
+    .orFail(new Error('NotValidId'))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
+        return;
+      }
+
+      if (err.message === 'NotValidId') {
+        res.status(404).send({ message: 'Карточка не найдена' });
         return;
       }
 
@@ -74,17 +73,16 @@ const dislikeCard = (req, res) => {
     { new: true },
   )
     .populate(['owner', 'likes'])
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Card not found' });
-        return;
-      }
-
-      res.status(200).send(card);
-    })
+    .orFail(new Error('NotValidId'))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
+        return;
+      }
+
+      if (err.message === 'NotValidId') {
+        res.status(404).send({ message: 'Карточка не найдена' });
         return;
       }
 
