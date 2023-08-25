@@ -56,7 +56,7 @@ const updateUser = (req, res) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
         return;
       }
@@ -81,7 +81,7 @@ const updateUserAvatar = (req, res) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
         return;
       }
