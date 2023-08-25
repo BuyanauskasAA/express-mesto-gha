@@ -22,9 +22,8 @@ const getCards = (req, res) => {
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
-const getCardById = (req, res) => {
-  Card.findById(req.params.cardId)
-    .populate(['owner', 'likes'])
+const deleteCard = (req, res) => {
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
         res.status(404).send({ message: 'Card not found' });
@@ -33,7 +32,14 @@ const getCardById = (req, res) => {
 
       res.status(200).send(card);
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+        return;
+      }
+
+      res.status(500).send({ message: err.message });
+    });
 };
 
 const likeCard = (req, res) => {
@@ -89,7 +95,7 @@ const dislikeCard = (req, res) => {
 module.exports = {
   createCard,
   getCards,
-  getCardById,
+  deleteCard,
   likeCard,
   dislikeCard,
 };
