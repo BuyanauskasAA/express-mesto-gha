@@ -31,7 +31,14 @@ const getUserById = (req, res) => {
 
       res.status(200).send(user);
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+        return;
+      }
+
+      res.status(500).send({ message: err.message });
+    });
 };
 
 const updateUser = (req, res) => {
