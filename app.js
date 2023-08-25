@@ -1,12 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const routes = require('./routes');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 
 mongoose
-  .connect('mongodb://localhost:27017/mestodb', {
+  .connect(DB_URL, {
     useNewUrlParser: true,
   })
   .then(() => {
@@ -17,11 +18,13 @@ const app = express();
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '64e89a671e82d04b11d439c1',
+    _id: '64e8d397ddfece7c123848c7',
   };
 
   next();
 });
+
+app.use(helmet());
 
 app.use(bodyParser.json());
 
