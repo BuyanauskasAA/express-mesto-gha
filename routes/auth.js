@@ -16,8 +16,8 @@ router.post(
         .min(2)
         .max(30),
       avatar: Joi
-        .string
-        .uri(),
+        .string()
+        .regex(/https?:\/\/(w{3,}\.)?[\w\d-]*\.[\w]{2,3}[\w\d\W]*#?/),
       email: Joi
         .string()
         .required()
@@ -26,7 +26,7 @@ router.post(
         .string()
         .min(8)
         .required(),
-    }).unknown(true),
+    }),
   }),
   createUser,
 );

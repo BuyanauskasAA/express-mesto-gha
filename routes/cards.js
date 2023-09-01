@@ -20,8 +20,8 @@ router.post(
         .max(30),
       link: Joi
         .string()
-        .required()
-        .uri(),
+        .regex(/https?:\/\/(w{3,}\.)?[\w\d-]*\.[\w]{2,3}[\w\d\W]*#?/)
+        .required(),
     }),
   }),
   createCard,
