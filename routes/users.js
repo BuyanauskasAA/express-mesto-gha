@@ -14,9 +14,9 @@ router.post('/signin', login);
 
 router.use(auth);
 
-router.get('/', getUsers);
-router.get('/:userId', getUserById);
-router.patch('/me', updateUser);
-router.patch('/me/avatar', updateUserAvatar);
+router.get('/users/', getUsers);
+router.get('/users/:userId', getUserById);
+router.patch('/users/me', updateUser);
+router.patch('/users/me/avatar', updateUserAvatar);
 
 module.exports = router;
