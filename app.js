@@ -16,14 +16,6 @@ mongoose
 
 const app = express();
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64e8d397ddfece7c123848c7',
-  };
-
-  next();
-});
-
 app.use(helmet());
 
 app.use(bodyParser.json());
