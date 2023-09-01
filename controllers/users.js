@@ -25,7 +25,12 @@ const createUser = (req, res, next) => {
       _id: user._id,
       email: user.email,
     }))
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) {
+        res.status(409).send({ message: 'Пользователь уже зарегистрирован!' });
+      }
+      next(err);
+    });
 };
 
 const login = (req, res, next) => {
