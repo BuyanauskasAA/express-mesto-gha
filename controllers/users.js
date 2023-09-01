@@ -1,8 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const NotFoundError = require('../errors/not-found-err');
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -24,17 +25,10 @@ const createUser = (req, res) => {
       _id: user._id,
       email: user.email,
     }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.message });
-        return;
-      }
-
-      res.status(500).send({ message: err.message });
-    });
+    .catch(next);
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredential(email, password)
@@ -47,80 +41,58 @@ const login = (req, res) => {
 
       res.send(token);
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch(next);
 };
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find()
-    .then((users) => res.status(200).send(users))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .then((users) => res.send(users))
+    .catch(next);
 };
 
-const getUserById = (req, res) => {
-  User.findById(req.params.userId)
-    .orFail(new Error('NotValidId'))
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: err.message });
-        return;
+const getUserById = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
       }
 
-      if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'Пользователь не найден' });
-        return;
-      }
-
-      res.status(500).send({ message: err.message });
-    });
+      res.send(user);
+    })
+    .catch(next);
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { ...req.body },
     { new: true, runValidators: true },
   )
-    .orFail(new Error('NotValidId'))
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'Пользователь не найден' });
-        return;
-      }
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: err.message });
-        return;
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
       }
 
-      res.status(500).send({ message: err.message });
-    });
+      res.send(user);
+    })
+    .catch(next);
 };
 
-const updateUserAvatar = (req, res) => {
+const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
     { new: true, runValidators: true },
   )
-    .orFail(new Error('NotValidId'))
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: err.message });
-        return;
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден!');
       }
 
-      if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'Пользователь не найден' });
-        return;
-      }
-
-      res.status(500).send({ message: err.message });
-    });
+      res.send(user);
+    })
+    .catch(next);
 };
 
 module.exports = {
