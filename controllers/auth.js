@@ -48,7 +48,12 @@ const signin = (req, res, next) => {
         { expiresIn: '7d' },
       );
 
-      res.send({ token });
+      res
+        .cookie('jwt', token, {
+          maxAge: 3600000,
+          httpOnly: true,
+        })
+        .end();
     })
     .catch(next);
 };
