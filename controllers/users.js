@@ -60,8 +60,20 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-const getUserById = (req, res, next) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден!');
+      }
+
+      res.send(user);
+    })
+    .catch(next);
+};
+
+const getUserById = (req, res, next) => {
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден!');
@@ -109,6 +121,7 @@ module.exports = {
   createUser,
   login,
   getUsers,
+  getCurrentUser,
   getUserById,
   updateUser,
   updateUserAvatar,

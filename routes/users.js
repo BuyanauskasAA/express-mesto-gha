@@ -3,13 +3,15 @@ const { Joi, celebrate } = require('celebrate');
 
 const {
   getUsers,
+  getCurrentUser,
   getUserById,
   updateUser,
   updateUserAvatar,
 } = require('../controllers/users');
 
 router.get('/', getUsers);
-router.get('/me', getUserById);
+router.get('/me', getCurrentUser);
+router.get('/:userId', getUserById);
 
 router.patch(
   '/me',
