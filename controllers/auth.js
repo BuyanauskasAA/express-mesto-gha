@@ -53,7 +53,7 @@ const signin = (req, res, next) => {
           maxAge: 3600000,
           httpOnly: true,
         })
-        .end();
+        .send({ message: 'Вы авторизованы' });
     })
     .catch(next);
 };
