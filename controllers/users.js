@@ -34,7 +34,7 @@ const createUser = (req, res, next) => {
         return next(new ConflictError('Пользователь уже зарегистрирован!'));
       }
 
-      next(err);
+      return next(err);
     });
 };
 
