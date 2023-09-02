@@ -3,13 +3,12 @@ const auth = require('../middlewares/auth');
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
 const authRouter = require('./auth');
+const NotFoundError = require('../errors/not-found-err');
 
 router.use('/', authRouter);
-router.use('/users', auth, usersRouter);
-router.use('/cards', auth, cardsRouter);
-
-router.use('*', (req, res) => {
-  res.status(404).send({ message: 'Неверный URL запроса к серверу' });
-});
+router.use(auth);
+router.use('/users', usersRouter);
+router.use('/cards', cardsRouter);
+router.use('*', (req, res, next) => next(new NotFoundError('Неверный URL запроса к серверу')));
 
 module.exports = router;
