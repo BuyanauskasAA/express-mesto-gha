@@ -1,5 +1,6 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -17,14 +18,15 @@ const getCards = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
+    .orFail(new NotFoundError('Карточка не найдена!'))
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка не найдена!');
+      if (req.user._id !== card.owner.toString()) {
+        throw new ForbiddenError('Карточка принадлежит другому пользователю!');
       }
-
-      res.send(card);
     })
+    .then(() => Card.findByIdAndRemove(req.params.cardId))
+    .then((card) => res.send(card))
     .catch(next);
 };
 
@@ -35,13 +37,8 @@ const likeCard = (req, res, next) => {
     { new: true },
   )
     .populate(['owner', 'likes'])
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка не найдена!');
-      }
-
-      res.send(card);
-    })
+    .orFail(new NotFoundError('Карточка не найдена!'))
+    .then((card) => res.send(card))
     .catch(next);
 };
 
@@ -52,13 +49,8 @@ const dislikeCard = (req, res, next) => {
     { new: true },
   )
     .populate(['owner', 'likes'])
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка не найдена!');
-      }
-
-      res.send(card);
-    })
+    .orFail(new NotFoundError('Карточка не найдена!'))
+    .then((card) => res.send(card))
     .catch(next);
 };
 
