@@ -25,7 +25,7 @@ app.use(routes);
 
 app.use(errors());
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
   res

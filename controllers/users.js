@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
+const ConflictError = require('../errors/conflict-err');
 
 const createUser = (req, res, next) => {
   const {
@@ -30,8 +31,9 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        res.status(409).send({ message: 'Пользователь уже зарегистрирован!' });
+        return next(new ConflictError('Пользователь уже зарегистрирован!'));
       }
+
       next(err);
     });
 };
