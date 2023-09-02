@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ConflictError = require('../errors/conflict-err');
 
+const { JWT_SECRET = '8c75c5dee295b5cb712e16e19b23468e52ee5003927d9ca8d6a6b3f2f28b4f3c' } = process.env;
+
 const signup = (req, res, next) => {
   const {
     name,
@@ -44,7 +46,7 @@ const signin = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        'some-secret-key',
+        JWT_SECRET,
         { expiresIn: '7d' },
       );
 
@@ -53,7 +55,7 @@ const signin = (req, res, next) => {
           maxAge: 3600000,
           httpOnly: true,
         })
-        .send({ message: 'Вы авторизованы' });
+        .send({ message: 'Вы авторизованы!' });
     })
     .catch(next);
 };
