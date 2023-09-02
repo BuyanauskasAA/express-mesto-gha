@@ -49,7 +49,7 @@ const login = (req, res, next) => {
         { expiresIn: '7d' },
       );
 
-      res.send(token);
+      res.send({ token });
     })
     .catch(next);
 };
