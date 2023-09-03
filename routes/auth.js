@@ -24,7 +24,6 @@ router.post(
         .email(),
       password: Joi
         .string()
-        .min(8)
         .required(),
     }),
   }),
@@ -41,7 +40,6 @@ router.post(
         .email(),
       password: Joi
         .string()
-        .min(8)
         .required(),
     }),
   }),
