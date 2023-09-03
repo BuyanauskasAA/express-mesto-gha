@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Joi, celebrate } = require('celebrate');
-const { signup, signin } = require('../controllers/auth');
+const { signup, signin, signout } = require('../controllers/auth');
 const urlRegex = require('../utils/url-regex');
 
 router.post(
@@ -45,5 +45,7 @@ router.post(
   }),
   signin,
 );
+
+router.post('/signout', signout);
 
 module.exports = router;

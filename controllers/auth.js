@@ -62,7 +62,12 @@ const signin = (req, res, next) => {
     .catch(next);
 };
 
+const signout = (req, res) => {
+  res.clearCookie('jwt').send({ message: 'Вы вышли!' });
+};
+
 module.exports = {
   signup,
   signin,
+  signout,
 };
