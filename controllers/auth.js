@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ConflictError = require('../errors/conflict-err');
+const BadRequestError = require('../errors/bad-request-err');
 
 const { JWT_SECRET = '8c75c5dee295b5cb712e16e19b23468e52ee5003927d9ca8d6a6b3f2f28b4f3c' } = process.env;
 
@@ -32,10 +33,12 @@ const signup = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        return next(new ConflictError('Пользователь уже зарегистрирован!'));
+        next(new ConflictError('Пользователь уже зарегистрирован!'));
+      } else if (err.name === 'ValidationError') {
+        next(new BadRequestError('Некорректные данные при регистрации пользователя!'));
+      } else {
+        next(err);
       }
-
-      return next(err);
     });
 };
 

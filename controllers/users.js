@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
+const BadRequestError = require('../errors/bad-request-err');
 
 const getUsers = (req, res, next) => {
   User.find()
@@ -29,7 +30,13 @@ const updateUser = (req, res, next) => {
   )
     .orFail(new NotFoundError('Пользователь не найден!'))
     .then((user) => res.send(user))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Некорректные данные при обновлении пользователя!'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const updateUserAvatar = (req, res, next) => {
@@ -41,7 +48,13 @@ const updateUserAvatar = (req, res, next) => {
   )
     .orFail(new NotFoundError('Пользователь не найден!'))
     .then((user) => res.send(user))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Некорректные данные при обновлении аватара!'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports = {
