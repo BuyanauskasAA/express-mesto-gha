@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Joi, celebrate } = require('celebrate');
+const urlRegex = require('../utils/url-regex');
 
 const {
   createCard,
@@ -20,7 +21,7 @@ router.post(
         .max(30),
       link: Joi
         .string()
-        .regex(/https?:\/\/(w{3,}\.)?[\w\d-]*\.[\w]{2,3}[\w\d\W]*#?/)
+        .regex(urlRegex)
         .required(),
     }),
   }),

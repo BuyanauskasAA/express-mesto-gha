@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { Joi, celebrate } = require('celebrate');
-
 const { signup, signin } = require('../controllers/auth');
+const urlRegex = require('../utils/url-regex');
 
 router.post(
   '/signup',
@@ -17,7 +17,7 @@ router.post(
         .max(30),
       avatar: Joi
         .string()
-        .regex(/https?:\/\/(w{3,}\.)?[\w\d-]*\.[\w]{2,3}[\w\d\W]*#?/),
+        .regex(urlRegex),
       email: Joi
         .string()
         .required()
