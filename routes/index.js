@@ -3,7 +3,7 @@ const auth = require('../middlewares/auth');
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
 const authRouter = require('./auth');
-const NotFoundError = require('../errors/not-found-err');
+const { NotFoundError } = require('../errors');
 
 router.use('/', authRouter);
 router.use(auth);
