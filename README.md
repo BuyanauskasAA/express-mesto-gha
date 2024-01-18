@@ -23,3 +23,13 @@ npm run start
 ```sh
 npm run dev
 ```
+
+## Технологии
+
+1. JavaScript
+2. Express.js
+3. Node.js
+4. MongoDB
+5. Nginx
+6. API
+7. JWT
