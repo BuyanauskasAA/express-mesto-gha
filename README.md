@@ -1,16 +1,25 @@
-[![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
-# [Проект Mesto фронтенд + бэкенд](https://github.com/BuyanauskasAA/express-mesto-gha)
+# express-mesto-gha
 
+`Mesto` - это веб-сервис, куда можно добавлять фотографии, удалять их и ставить лайки.
 
-## Директории
+Бэкенд для проекта `Mesto`. 
 
-`/routes` — папка с файлами роутера  
-`/controllers` — папка с файлами контроллеров пользователя и карточки   
-`/models` — папка с файлами описания схем пользователя и карточки  
-  
-Остальные директории вспомогательные, создаются при необходимости разработчиком
+## Setup
+
+```sh
+npm install
+```
 
 ## Запуск проекта
 
-`npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+- Запуск сервера
+
+```sh
+npm run start
+```
+
+- Запуск сервера с hot-reload
+
+```sh
+npm run dev
+```
